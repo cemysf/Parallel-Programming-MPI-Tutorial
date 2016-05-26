@@ -10,8 +10,8 @@ int main()
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
 
-    int rows=2, cols=2;
-    int dim[2] = {cols, rows};       /// 4 columns, 3 rows    !!process sayısını 12 ver!!
+    int rows=2, cols=2;     ///// process sayısı rows*cols olmalı!!
+    int dim[2] = {cols, rows};
     int period[2] = {1, 1};     /// (bool) both rows and cols are cyclic
     int reorder = 1;            /// (bool) rank reordering
 
@@ -69,12 +69,14 @@ int main()
 
 
 //    /// !!! MPI_Cart_Shift returns correct ranks to shift data !!!
-//    int left, right, up, down;
-//    if(my_rank == 0)
-//    {
-//        MPI_Cart_shift(comm_cart, 0, 1, &my_rank, &left, &right);
-//        MPI_Cart_shift(comm_cart, 1, 1, &my_rank, &up, &down);
-//    }
+    int left_right[2], up_down[2];
+    if(my_rank == 1)
+    {
+        MPI_Cart_shift(comm_cart, 0, 1, &my_rank, left_right);
+        MPI_Cart_shift(comm_cart, 1, 1, &my_rank, up_down);
+
+        printf("(rank %d)my neighbours ranks: left:%d right:%d up:%d down:%d \n", my_rank, left_right[0], left_right[1], up_down[0], up_down[1]);
+    }
 
 
     MPI_Finalize();
